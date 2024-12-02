@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS mi_base_de_datos DEFAULT CHARACTER SET utf8mb4 COL
 USE mi_base_de_datos;
 
 -- Tabla de usuarios
-CREATE TABLE users (
+CREATE TABLE new_users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE comments (
 );
 
 -- Insertar datos de ejemplo en la tabla de usuarios
-INSERT INTO users (name, email, password) VALUES
+INSERT INTO new_users (name, email, password) VALUES
 ('Admin', 'admin@example.com', 'password_encriptada'),
 ('Usuario1', 'usuario1@example.com', 'password_encriptada'),
 ('Usuario2', 'usuario2@example.com', 'password_encriptada');
