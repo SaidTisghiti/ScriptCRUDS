@@ -65,12 +65,8 @@ try {
  */
 function removeCommentsFromSQL($sql)
 {
-    // Eliminar comentarios de línea (-- y #)
-    $sql = preg_replace('/(--.*?$)|(#.*?$)/m', '', $sql);
-
-    // Eliminar comentarios en bloque (/* */)
-    $sql = preg_replace('/\/\*.*?\*\//s', '', $sql);
-
+    $sql = preg_replace('/(--.*?$)|(#.*?$)/m', '', $sql); // Línea
+    $sql = preg_replace('/\/\*.*?\*\//s', '', $sql); // Bloque
     return $sql;
 }
 
@@ -83,12 +79,11 @@ function parseTablesFromSQL($queries)
     foreach ($queries as $query) {
         $query = trim($query);
 
-        // Intentar extraer las tablas con CREATE TABLE
         if (preg_match('/CREATE TABLE\s+`?(\w+)`?\s*\((.+)\)/si', $query, $matches)) {
             $tableName = $matches[1];
             $schema = explode(",", $matches[2]);
             $tables[$tableName] = array_map('trim', $schema);
-            echo "Tabla detectada: $tableName\n"; // Depuración
+            echo "Tabla detectada: $tableName\n";
         }
     }
     return $tables;
@@ -99,13 +94,8 @@ function parseTablesFromSQL($queries)
  */
 function createMigration($table, $schema)
 {
-    // Detectar si la columna 'id' ya existe
-    $hasIdColumn = hasIdColumn($schema);
-
-    $columns = generateColumns($schema, $hasIdColumn);
+    $columns = generateColumns($schema);
     $foreignKeys = generateForeignKeys($schema);
-
-    $idLine = $hasIdColumn ? "\$table->id(); // Clave primaria automática\n            " : '';
 
     return <<<EOT
 <?php
@@ -122,7 +112,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('$table', function (Blueprint \$table) {
-            $idLine$columns
+            \$table->id(); // Clave primaria automática
+            $columns
             $foreignKeys
             \$table->timestamps(); // created_at y updated_at automáticos
         });
@@ -140,58 +131,33 @@ EOT;
 }
 
 /**
- * Verificar si el esquema ya incluye una columna 'id'
- */
-function hasIdColumn($schema)
-{
-    foreach ($schema as $column) {
-        if (preg_match('/`?id`?\s+/', strtolower($column))) {
-            return true; // Existe una columna 'id'
-        }
-    }
-    return false;
-}
-
-/**
  * Generar las columnas para la migración
  */
-function generateColumns($schema, $hasIdColumn)
+function generateColumns($schema)
 {
     $columns = '';
-    $seenColumns = []; // Para rastrear columnas ya agregadas
+    $seenColumns = [];
 
     foreach ($schema as $column) {
         if (preg_match('/`?(\w+)`?\s+([\w\(\),\s]+)(,|$)/', $column, $matches)) {
             $field = $matches[1];
 
-            // Ignorar columnas FOREIGN innecesarias
-            if (strtolower($field) === 'foreign') {
-                continue;
-            }
+            if (strtolower($field) === 'foreign') continue;
 
-            // Reemplazar created_at y updated_at con timestamps
-            if (strtolower($field) === 'created_at' || strtolower($field) === 'updated_at') {
-                continue;
-            }
+            // Ignorar duplicados de 'id' si ya se manejó como clave primaria
+            if (strtolower($field) === 'id') continue;
 
-            // Ignorar 'id' adicional si $table->id() ya se usó
-            if (strtolower($field) === 'id' && $hasIdColumn) {
-                continue;
-            }
+            // Ignorar created_at y updated_at explícitos (se reemplazan por timestamps())
+            if (in_array(strtolower($field), ['created_at', 'updated_at'])) continue;
 
-            // Evitar duplicación de columnas
-            if (in_array($field, $seenColumns)) {
-                continue;
-            }
+            if (in_array($field, $seenColumns)) continue;
 
-            // Añadir el campo a las columnas vistas
             $seenColumns[] = $field;
-
             $typeDefinition = $matches[2];
             $type = mapTypeToMigration($typeDefinition);
 
-            // Configurar claves foráneas con unsignedBigInteger
-            if (str_contains(strtolower($field), '_id')) {
+            // Ajustar claves foráneas para que sean unsignedBigInteger
+            if (preg_match('/_id$/', $field)) {
                 $type = 'unsignedBigInteger';
             }
 
@@ -214,6 +180,8 @@ function generateForeignKeys($schema)
             $localKey = $matches[1];
             $foreignTable = $matches[2];
             $foreignKey = $matches[3];
+
+            // Asegurarse de que las claves foráneas sean unsignedBigInteger
             $foreignKeys .= "\$table->foreign('$localKey')->references('$foreignKey')->on('$foreignTable')->onDelete('cascade');\n            ";
         }
     }
@@ -225,6 +193,8 @@ function generateForeignKeys($schema)
  */
 function mapTypeToMigration($type)
 {
+    $type = strtolower($type);
+
     if (str_contains($type, 'tinyint')) return 'tinyInteger';
     if (str_contains($type, 'smallint')) return 'smallInteger';
     if (str_contains($type, 'mediumint')) return 'mediumInteger';
@@ -233,7 +203,7 @@ function mapTypeToMigration($type)
     if (str_contains($type, 'decimal')) return 'decimal';
     if (str_contains($type, 'float')) return 'float';
     if (str_contains($type, 'double')) return 'double';
-    if (str_contains($type, 'char')) return 'char';
+    if (str_contains($type, 'char')) return 'string';
     if (str_contains($type, 'varchar')) return 'string';
     if (str_contains($type, 'text')) return 'text';
     if (str_contains($type, 'blob')) return 'binary';
@@ -245,7 +215,7 @@ function mapTypeToMigration($type)
     if (str_contains($type, 'json')) return 'json';
     if (str_contains($type, 'geometry')) return 'geometry';
     if (str_contains($type, 'enum')) return 'enum';
-    return 'string'; // Por defecto
+    return 'string';
 }
 
 /**
@@ -254,128 +224,10 @@ function mapTypeToMigration($type)
 function deleteExistingMigration($outputDir, $table)
 {
     $migrationFiles = scandir($outputDir);
-
     foreach ($migrationFiles as $file) {
         if (str_contains($file, "create_{$table}_table")) {
             unlink("$outputDir/$file");
             echo "Migración existente eliminada: $outputDir/$file\n";
         }
     }
-}
-function generateSeeder($tableName, $exampleData) {
-    $seederFileName = "{$tableName}Seeder.php";
-    $outputDir = __DIR__ . '/database/seeders/';
-    if (!is_dir($outputDir)) {
-        mkdir($outputDir, 0777, true);
-    }
-
-    $dataInsertions = '';
-    foreach ($exampleData as $row) {
-        $dataInsertions .= "\t\t\t['" . implode("', '", $row) . "'],\n";
-    }
-
-    $seederTemplate = <<<PHP
-<?php
-
-namespace Database\Seeders;
-
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-
-class {$tableName}Seeder extends Seeder
-{
-    public function run()
-    {
-        DB::table('{$tableName}')->insert([
-$dataInsertions
-        ]);
-    }
-}
-PHP;
-
-    File::put($outputDir . $seederFileName, $seederTemplate);
-    echo "Seeder for {$tableName} created at {$outputDir}{$seederFileName}\n";
-}
-
-function generateController($tableName) {
-    $controllerName = Str::studly(Str::singular($tableName)) . 'Controller';
-    $outputDir = __DIR__ . '/app/Http/Controllers/';
-    if (!is_dir($outputDir)) {
-        mkdir($outputDir, 0777, true);
-    }
-
-    $controllerTemplate = <<<PHP
-<?php
-
-namespace App\Http\Controllers;
-
-use App\Models\\{$tableName};
-use Illuminate\Http\Request;
-
-class {$controllerName} extends Controller
-{
-    public function index()
-    {
-        return view('{$tableName}.index', ['data' => {$tableName}::all()]);
-    }
-
-    public function create()
-    {
-        return view('{$tableName}.create');
-    }
-
-    public function store(Request \$request)
-    {
-        {$tableName}::create(\$request->all());
-        return redirect()->route('{$tableName}.index');
-    }
-
-    public function edit(\$id)
-    {
-        \$item = {$tableName}::findOrFail(\$id);
-        return view('{$tableName}.edit', compact('item'));
-    }
-
-    public function update(Request \$request, \$id)
-    {
-        \$item = {$tableName}::findOrFail(\$id);
-        \$item->update(\$request->all());
-        return redirect()->route('{$tableName}.index');
-    }
-
-    public function destroy(\$id)
-    {
-        {$tableName}::destroy(\$id);
-        return redirect()->route('{$tableName}.index');
-    }
-}
-PHP;
-
-    File::put($outputDir . $controllerName . '.php', $controllerTemplate);
-    echo "Controller for {$tableName} created at {$outputDir}{$controllerName}.php\n";
-}
-
-function generateViews($tableName) {
-    $outputDir = __DIR__ . "/resources/views/{$tableName}/";
-    if (!is_dir($outputDir)) {
-        mkdir($outputDir, 0777, true);
-    }
-
-    $views = ['index', 'create', 'edit'];
-    foreach ($views as $view) {
-        File::put($outputDir . "{$view}.blade.php", "<!-- {$view} view for {$tableName} -->");
-        echo "View {$view} for {$tableName} created at {$outputDir}{$view}.blade.php\n";
-    }
-}
-
-// Leer el archivo SQL
-$sqlContent = file_get_contents('base_datos_basica.sql');
-$tables = parseSQL($sqlContent);
-
-// Generar archivos para cada tabla
-foreach ($tables as $tableName => $columns) {
-    generateMigration($tableName, $columns);
-    generateSeeder($tableName, []);
-    generateController($tableName);
-    generateViews($tableName);
 }

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\comments;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
     public function index()
     {
-        return view('comments.index', ['data' => comments::all()]);
+        return view('comments.index', ['data' => Comment::all()]);
     }
 
     public function create()
@@ -19,26 +19,26 @@ class CommentController extends Controller
 
     public function store(Request $request)
     {
-        comments::create($request->all());
+        Comment::create($request->all());
         return redirect()->route('comments.index');
     }
 
     public function edit($id)
     {
-        $item = comments::findOrFail($id);
+        $item = Comment::findOrFail($id);
         return view('comments.edit', compact('item'));
     }
 
     public function update(Request $request, $id)
     {
-        $item = comments::findOrFail($id);
+        $item = Comment::findOrFail($id);
         $item->update($request->all());
         return redirect()->route('comments.index');
     }
 
     public function destroy($id)
     {
-        comments::destroy($id);
+        Comment::destroy($id);
         return redirect()->route('comments.index');
     }
 }

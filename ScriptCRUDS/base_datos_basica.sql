@@ -1,7 +1,3 @@
--- Crear base de datos
-CREATE DATABASE IF NOT EXISTS mi_base_de_datos DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE mi_base_de_datos;
-
 -- Tabla de usuarios
 CREATE TABLE new_users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -20,7 +16,7 @@ CREATE TABLE posts (
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES new_users(id) ON DELETE CASCADE
 );
 
 -- Tabla de comentarios
@@ -32,8 +28,9 @@ CREATE TABLE comments (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES new_users(id) ON DELETE CASCADE
 );
+
 
 -- Insertar datos de ejemplo en la tabla de usuarios
 INSERT INTO new_users (name, email, password) VALUES
@@ -47,8 +44,4 @@ INSERT INTO posts (user_id, title, content) VALUES
 (2, 'Segundo Post', 'Contenido del segundo post'),
 (3, 'Tercer Post', 'Contenido del tercer post');
 
--- Insertar datos de ejemplo en la tabla de comentarios
-INSERT INTO comments (post_id, user_id, comment) VALUES
-(1, 2, 'Comentario en el primer post'),
-(1, 3, 'Otro comentario en el primer post'),
-(2, 1, 'Comentario en el segundo post');
+
