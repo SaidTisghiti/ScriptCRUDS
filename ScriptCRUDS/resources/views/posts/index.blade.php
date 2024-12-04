@@ -1,16 +1,21 @@
-@extends('layouts.app')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Listado de posts</title>
+</head>
+<body>
 <div class="container">
-    <h1>Listado de posts</h1>
-    <a href="{{ route('posts.create') }}" class="btn btn-primary">Crear nuevo</a>
+    <h1 class="my-4">Listado de posts</h1>
+    <a href="{{ route('posts.create') }}" class="btn btn-primary mb-3">Crear nuevo</a>
     <table class="table">
         <thead>
             <tr>                <th>Id</th>
                 <th>User_id</th>
                 <th>Title</th>
                 <th>Content</th>
-                <th>Foreign</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -20,7 +25,6 @@
                 <td>{{ $item->user_id }}</td>
                 <td>{{ $item->title }}</td>
                 <td>{{ $item->content }}</td>
-                <td>{{ $item->foreign }}</td>
                 <td>
                     <a href="{{ route('posts.show', $item->id) }}" class="btn btn-info">Ver</a>
                     <a href="{{ route('posts.edit', $item->id) }}" class="btn btn-warning">Editar</a>
@@ -35,4 +39,5 @@
         </tbody>
     </table>
 </div>
-@endsection
+</body>
+</html>

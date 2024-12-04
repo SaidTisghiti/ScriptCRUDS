@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('comment');
             
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('new_users')->onDelete('cascade');
             
             $table->timestamps(); // created_at y updated_at automáticos
         });

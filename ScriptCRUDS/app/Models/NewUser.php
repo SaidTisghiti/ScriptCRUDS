@@ -21,4 +21,12 @@ class NewUser extends Model
     ];
 
     
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'new_users_id', 'id');
+    }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'new_users_id', 'id');
+    }
 }

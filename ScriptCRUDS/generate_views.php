@@ -98,7 +98,7 @@ function parseColumnsFromSchema($schema)
     foreach ($lines as $line) {
         if (preg_match('/`?(\w+)`?\s+([\w\(\),\s]+)/', $line, $matches)) {
             $columnName = strtolower($matches[1]);
-            if (!in_array($columnName, ['created_at', 'updated_at'])) { // Ignorar campos automáticos
+            if (!in_array($columnName, ['created_at', 'updated_at', 'foreign'])) { // Ignorar campos automáticos y `foreign`
                 $columns[] = $columnName;
             }
         }
@@ -108,17 +108,23 @@ function parseColumnsFromSchema($schema)
 }
 
 /**
- * Crear la vista index.blade.php
+ * Crear la vista index
  */
 function createIndexView($viewDir, $table, $columns)
 {
     $viewContent = <<<EOT
-@extends('layouts.app')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Listado de $table</title>
+</head>
+<body>
 <div class="container">
-    <h1>Listado de $table</h1>
-    <a href="{{ route('$table.create') }}" class="btn btn-primary">Crear nuevo</a>
+    <h1 class="my-4">Listado de $table</h1>
+    <a href="{{ route('$table.create') }}" class="btn btn-primary mb-3">Crear nuevo</a>
     <table class="table">
         <thead>
             <tr>
@@ -156,29 +162,36 @@ EOT;
         </tbody>
     </table>
 </div>
-@endsection
+</body>
+</html>
 EOT;
 
     file_put_contents("$viewDir/index.blade.php", $viewContent);
 }
 
 /**
- * Crear la vista create.blade.php
+ * Crear la vista create
  */
 function createCreateView($viewDir, $table, $columns)
 {
     $viewContent = <<<EOT
-@extends('layouts.app')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Crear $table</title>
+</head>
+<body>
 <div class="container">
-    <h1>Crear $table</h1>
+    <h1 class="my-4">Crear $table</h1>
     <form action="{{ route('$table.store') }}" method="POST">
         @csrf
 EOT;
 
     foreach ($columns as $column) {
-        if (!in_array($column, ['id'])) { // Ignorar campos automáticos
+        if (!in_array($column, ['id'])) {
             $viewContent .= <<<EOT
         <div class="mb-3">
             <label for="$column" class="form-label">{{ ucfirst('$column') }}</label>
@@ -192,30 +205,37 @@ EOT;
         <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
 </div>
-@endsection
+</body>
+</html>
 EOT;
 
     file_put_contents("$viewDir/create.blade.php", $viewContent);
 }
 
 /**
- * Crear la vista edit.blade.php
+ * Crear la vista edit
  */
 function createEditView($viewDir, $table, $columns)
 {
     $viewContent = <<<EOT
-@extends('layouts.app')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Editar $table</title>
+</head>
+<body>
 <div class="container">
-    <h1>Editar $table</h1>
+    <h1 class="my-4">Editar $table</h1>
     <form action="{{ route('$table.update', \$item->id) }}" method="POST">
         @csrf
         @method('PUT')
 EOT;
 
     foreach ($columns as $column) {
-        if (!in_array($column, ['id'])) { // Ignorar campos automáticos
+        if (!in_array($column, ['id'])) {
             $viewContent .= <<<EOT
         <div class="mb-3">
             <label for="$column" class="form-label">{{ ucfirst('$column') }}</label>
@@ -229,23 +249,30 @@ EOT;
         <button type="submit" class="btn btn-primary">Actualizar</button>
     </form>
 </div>
-@endsection
+</body>
+</html>
 EOT;
 
     file_put_contents("$viewDir/edit.blade.php", $viewContent);
 }
 
 /**
- * Crear la vista show.blade.php
+ * Crear la vista show
  */
 function createShowView($viewDir, $table, $columns)
 {
     $viewContent = <<<EOT
-@extends('layouts.app')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Detalles de $table</title>
+</head>
+<body>
 <div class="container">
-    <h1>Detalles de $table</h1>
+    <h1 class="my-4">Detalles de $table</h1>
     <table class="table">
         <tbody>
 EOT;
@@ -264,7 +291,8 @@ EOT;
     </table>
     <a href="{{ route('$table.index') }}" class="btn btn-secondary">Volver</a>
 </div>
-@endsection
+</body>
+</html>
 EOT;
 
     file_put_contents("$viewDir/show.blade.php", $viewContent);

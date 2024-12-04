@@ -1,9 +1,15 @@
-@extends('layouts.app')
-
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Listado de new_users</title>
+</head>
+<body>
 <div class="container">
-    <h1>Listado de new_users</h1>
-    <a href="{{ route('new_users.create') }}" class="btn btn-primary">Crear nuevo</a>
+    <h1 class="my-4">Listado de new_users</h1>
+    <a href="{{ route('new_users.create') }}" class="btn btn-primary mb-3">Crear nuevo</a>
     <table class="table">
         <thead>
             <tr>                <th>Id</th>
@@ -33,4 +39,5 @@
         </tbody>
     </table>
 </div>
-@endsection
+</body>
+</html>
