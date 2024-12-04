@@ -14,12 +14,12 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# echo "Generando seeders..."
-# php generate_seeders.php base_datos_basica.sql
-# if [ $? -ne 0 ]; then
-#     echo "Error generando seeders"
-#     exit 1
-# fi
+echo "Generando seeders..."
+php generate_seeders.php base_datos_basica.sql
+if [ $? -ne 0 ]; then
+    echo "Error generando seeders"
+    exit 1
+fi
 
 echo "Generando controladores..."
 php generate_controllers.php base_datos_basica.sql
