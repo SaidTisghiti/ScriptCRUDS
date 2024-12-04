@@ -23,6 +23,12 @@ class NewUserController extends Controller
         return redirect()->route('new_users.index');
     }
 
+    public function show($id)
+    {
+        $item = NewUser::findOrFail($id);
+        return view('new_users.show', compact('item'));
+    }
+
     public function edit($id)
     {
         $item = NewUser::findOrFail($id);

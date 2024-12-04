@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id(); // Clave primaria automática
-            $table->unsignedBigInteger('user_id');
-            $table->string('title');
-            $table->text('content');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->text('address')->nullable();
             
-            $table->foreign('user_id')->references('id')->on('new_users')->onDelete('cascade');
             
             $table->timestamps(); // created_at y updated_at automáticos
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('customers');
     }
 };

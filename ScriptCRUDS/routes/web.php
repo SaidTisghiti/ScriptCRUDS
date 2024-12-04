@@ -6,242 +6,28 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Rutas para new_users
 Route::resource('new_users', App\Http\Controllers\NewUserController::class);
 
-// Rutas para posts
 Route::resource('posts', App\Http\Controllers\PostController::class);
 
-// Rutas para comments
 Route::resource('comments', App\Http\Controllers\CommentController::class);
 
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
+Route::resource('coches', App\Http\Controllers\CochController::class);
 
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
+Route::resource('clientes', App\Http\Controllers\ClienteController::class);
 
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
+Route::resource('empleados', App\Http\Controllers\EmpleadoController::class);
 
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
+Route::resource('ventas', App\Http\Controllers\VentaController::class);
 
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
+Route::resource('mantenimientos', App\Http\Controllers\MantenimientoController::class);
 
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
+Route::resource('cars', App\Http\Controllers\CarController::class);
 
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
+Route::resource('customers', App\Http\Controllers\CustomerController::class);
 
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
+Route::resource('employees', App\Http\Controllers\EmployeeController::class);
 
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
+Route::resource('sales', App\Http\Controllers\SaleController::class);
 
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para all_data_types
-Route::resource('all_data_types', App\Http\Controllers\AllDataTypeController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
-
-// Rutas para new_users
-Route::resource('new_users', App\Http\Controllers\NewUserController::class);
-
-// Rutas para posts
-Route::resource('posts', App\Http\Controllers\PostController::class);
-
-// Rutas para comments
-Route::resource('comments', App\Http\Controllers\CommentController::class);
+Route::resource('maintenance', App\Http\Controllers\MaintenanceController::class);

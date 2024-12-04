@@ -23,6 +23,12 @@ class CommentController extends Controller
         return redirect()->route('comments.index');
     }
 
+    public function show($id)
+    {
+        $item = Comment::findOrFail($id);
+        return view('comments.show', compact('item'));
+    }
+
     public function edit($id)
     {
         $item = Comment::findOrFail($id);

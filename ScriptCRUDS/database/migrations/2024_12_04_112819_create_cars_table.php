@@ -11,11 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('new_users', function (Blueprint $table) {
+        Schema::create('cars', function (Blueprint $table) {
             $table->id(); // Clave primaria automática
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
+            $table->string('brand');
+            $table->string('model');
+            $table->integer('year');
+            $table->decimal('price')->nullable();
+            $table->string('NOT')->nullable();
+            $table->string('color')->nullable();
+            $table->integer('stock');
             
             
             $table->timestamps(); // created_at y updated_at automáticos
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('new_users');
+        Schema::dropIfExists('cars');
     }
 };

@@ -122,6 +122,12 @@ class $controllerName extends Controller
         return redirect()->route('$viewName.index');
     }
 
+    public function show(\$id)
+    {
+        \$item = $modelName::findOrFail(\$id);
+        return view('$viewName.show', compact('item'));
+    }
+
     public function edit(\$id)
     {
         \$item = $modelName::findOrFail(\$id);
@@ -150,15 +156,19 @@ EOT;
 function registerRoute($routeFilePath, $viewName, $controllerName)
 {
     $routeDefinition = <<<EOT
-
-// Rutas para $viewName
 Route::resource('$viewName', App\Http\Controllers\\$controllerName::class);
-
 EOT;
 
     if (file_exists($routeFilePath)) {
-        file_put_contents($routeFilePath, $routeDefinition, FILE_APPEND);
-        echo "Ruta añadida para $viewName en $routeFilePath\n";
+        $currentRoutes = file_get_contents($routeFilePath);
+        
+        // Verificar si la ruta ya existe
+        if (strpos($currentRoutes, $routeDefinition) === false) {
+            file_put_contents($routeFilePath, "\n$routeDefinition\n", FILE_APPEND);
+            echo "Ruta añadida para $viewName en $routeFilePath\n";
+        } else {
+            echo "La ruta para $viewName ya existe en $routeFilePath. No se añadió.\n";
+        }
     } else {
         echo "Archivo de rutas no encontrado: $routeFilePath. Ruta no añadida.\n";
     }
